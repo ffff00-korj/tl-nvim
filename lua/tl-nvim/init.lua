@@ -1,28 +1,23 @@
 local M = {}
 
 function M.setup()
-  -- Проверяем, установлен ли treesitter
-  local has_treesitter, _ = pcall(require, 'nvim-treesitter')
-  if not has_treesitter then
-    vim.notify("tl-nvim: nvim-treesitter not found!", vim.log.levels.WARN)
-    return
-  end
+	vim.filetype.add({
+		extension = {
+			tl = "tl",
+		},
+	})
 
-  -- Регистрируем парсер для TL (если нужно)
-  local configs = require('nvim-treesitter.configs')
-  if not pcall(require, 'tree-sitter-tl') then
-    -- Если парсер не установлен, можно добавить инструкцию по установке
-    vim.notify("tl-nvim: tree-sitter parser for TL not found!", vim.log.levels.WARN)
-  end
+	local has_treesitter, treesitter_configs = pcall(require, "nvim-treesitter.configs")
 
-  -- Настраиваем подсветку
-  configs.setup({
-    ensure_installed = {}, -- можно добавить 'tl' если парсер доступен
-    highlight = {
-      enable = true,
-      additional_vim_regex_highlighting = false,
-    },
-  })
+	if has_treesitter then
+		treesitter_configs.setup({
+			highlight = {
+				enable = true,
+				disable = { "tl" },
+				additional_vim_regex_highlighting = true,
+			},
+		})
+	end
 end
 
 return M
