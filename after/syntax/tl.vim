@@ -11,36 +11,27 @@ syntax match tlSection "---types---"
 syntax match tlSection "---functions---"
 
 " === Комбинаторы и типы ===
-syntax match tlType "\<[A-Z]\w*\>"
-syntax match tlCombinator "\([a-z]\w*\.\)\?[a-z]\w*\(#[[:xdigit:]]\{1,8}\)\?" contains=tlMagic
+syntax match tlType "\<[A-Z][a-zA-Z0-9_]*\>"
+syntax match tlCombinator "\<[a-z][a-zA-Z0-9_]*\>\(#[a-fA-F0-9]\{1,8\}\)\?" contains=tlMagic
 
 " === Модификаторы/атрибуты ===
 syntax match tlModifier "@\<\(read\|write\|readwrite\|any\|kphp\|internal\)\>"
 
 " === Поля и переменные ===
-syntax match tlField "\w\+\s*:"me=e-1
-syntax match tlVariable "\<[a-z_]\w*\>" contained
+syntax match tlField "\<[a-zA-Z_][a-zA-Z0-9_]*\>:\@="
+syntax match tlVariable "\<[a-z_][a-zA-Z0-9_]*\>"
 
 " === Числовые константы ===
 syntax match tlNumber "\<\d\+\>"
-syntax match tlMagic "#[[:xdigit:]]\{1,8\}"
+syntax match tlMagic "#[a-fA-F0-9]\{6,8\}"
 
 " === Строки ===
-syntax match tlString "\w\+\.\d\+\?"
+" Упрощенная версия - убрал проблемный regex
 syntax region tlString start=+"+ skip=+\\"+ end=+"+ contains=@Spell
 
-" === Ключевые слова и управляющие конструкции ===
-syntax match tlKeyword "\(%\|]\)\?\([a-z]\w*\.\)\?\w\+\>\(<\|(\)\?" contains=tlType,tlCombinator
-
-" === Скобки и пунктуация ===
+" === Ключевые слова ===
+syntax keyword tlKeyword type function return if else for while
 syntax match tlPunctuation "[{}()\[\];=\.]"
-syntax match tlBold "[%]"
-
-" === Повторяющиеся секции ===
-syntax region tlRepeated start="\w*\s*\*\(\s*\)\?\[" end="\]" contains=tlNumber,tlCharacter,tlComment,tlField,tlPunctuation
-
-" === Шаблонные аргументы ===
-syntax region tlTemplate start="{" end="}" contains=tlComment,tlVariable,tlKeyword,tlPunctuation
 
 " === Подсветка ===
 highlight default link tlComment Comment
@@ -56,9 +47,5 @@ highlight default link tlMagic Number
 highlight default link tlString String
 highlight default link tlKeyword Keyword
 highlight default link tlPunctuation Delimiter
-highlight default link tlBold Bold
-highlight default link tlCharacter Character
-highlight default link tlRepeated Structure
-highlight default link tlTemplate Structure
 
 let b:current_syntax = "tl"
