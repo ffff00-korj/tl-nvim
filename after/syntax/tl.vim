@@ -1,6 +1,5 @@
 if exists('b:current_syntax') | finish |  endif
 
-" Treesitter может не покрывать все случаи, поэтому оставляем regex подсветку
 syntax match tlMagic "\v\#[a-f0-9]+"
 syntax match tlAttribute "\v\@<[a-z]*>"
 syntax match tlComment "//.*"
